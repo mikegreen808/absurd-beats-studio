@@ -121,38 +121,6 @@ p.tagline {
   box-shadow: 0 0 20px #FF66FF, 0 0 30px #FF33CC;
 }
 
-.save-btn {
-  background: linear-gradient(135deg, #00FFFF, #8A2BE2);
-  color: #0D0D0D;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  padding: 0.4rem 0.6rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 10px #00FFFF;
-}
-.save-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px #8A2BE2, 0 0 30px #00FFFF;
-}
-
-.cancel-btn {
-  background: linear-gradient(135deg, #FF33CC, #FF66FF);
-  color: #0D0D0D;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  padding: 0.4rem 0.6rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 10px #FF33CC;
-}
-.cancel-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px #FF66FF, 0 0 30px #FF33CC;
-}
-
 /* ===== Search Bar ===== */
 #search-bar {
   margin: 2rem auto;
@@ -289,48 +257,10 @@ p.tagline {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Cyan pulse for philosophers */
-@keyframes philosopherPulse {
-  0%   { box-shadow: 0 -2px 6px rgba(0,255,255,0.3); }
-  50%  { box-shadow: 0 -4px 20px rgba(0,255,255,0.6); }
-  100% { box-shadow: 0 -2px 6px rgba(0,255,255,0.3); }
-}
-
-/* Magenta pulse for musicians */
-@keyframes musicianPulse {
-  0%   { box-shadow: 0 -2px 6px rgba(255,51,204,0.3); }
-  50%  { box-shadow: 0 -4px 20px rgba(255,51,204,0.6); }
-  100% { box-shadow: 0 -2px 6px rgba(255,51,204,0.3); }
-}
-
-#quote {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #111;
-  padding: 0.8rem;
+footer {
+  margin-top: 5rem;
   font-size: 0.9rem;
   font-style: italic;
-  text-align: center;
-  transition: opacity 0.5s ease, color 1s ease, text-shadow 1s ease;
+  transition: opacity 0.5s ease;
   animation: fadeQuote 0.8s ease;
-  z-index: 999;
-}
-
-/* Philosopher quotes: cyan glow + cyan pulse */
-#quote.philosopher {
-  color: #00FFFF;
-  text-shadow: 0 0 10px #00FFFF, 0 0 20px rgba(0,255,255,0.6);
-  animation: fadeQuote 0.8s ease, philosopherPulse 6s infinite ease-in-out;
-}
-
-/* Musician quotes: magenta glow + magenta pulse */
-#quote.musician {
-  color: #FF33CC;
-  text-shadow: 0 0 10px #FF33CC, 0 0 20px rgba(255,51,204,0.6);
-  animation: fadeQuote 0.8s ease, musicianPulse 6s infinite ease-in-out;
-}
-body {
-  padding-bottom: 3rem; /* space for footer */
 }

@@ -7,6 +7,50 @@ function updateTrackCount(count, longPulse = false) {
   header.classList.add(longPulse ? "pulse-long" : "pulse");
 }
 
+// ===== Validation Helper =====
+function validateField(input, type) {
+  let value = input.value.trim();
+  let valid = true;
+  let message = "";
+
+  switch (type) {
+    case "title":
+      valid = value.length > 0;
+      if (!valid) message = "Title cannot be empty.";
+      break;
+    case "bpm":
+      const bpm = parseInt(value, 10);
+      valid = !isNaN(bpm) && bpm >= 40 && bpm <= 300;
+      if (!valid) message = "BPM must be between 40 and 300.";
+      break;
+    case "key":
+      valid = /^[A-G](#|b)?m?$/.test(value);
+      if (!valid) message = "Key must be a valid musical key (e.g. C, G#m, Bb).";
+      break;
+    case "tag":
+      valid = value.length > 0;
+      if (!valid) message = "Existential tag cannot be empty.";
+      break;
+  }
+
+  const errorEl = input.nextElementSibling;
+  if (!valid) {
+    input.style.borderColor = "red";
+    input.style.boxShadow = "0 0 10px red";
+    if (errorEl && errorEl.classList.contains("error-message")) {
+      errorEl.textContent = message;
+    }
+  } else {
+    input.style.borderColor = "#00FFFF";
+    input.style.boxShadow = "0 0 10px #00FFFF";
+    if (errorEl && errorEl.classList.contains("error-message")) {
+      errorEl.textContent = "";
+    }
+  }
+
+  return valid;
+}
+
 // ===== Helper: create track card with Edit/Delete =====
 function createTrackCard(track) {
   const card = document.createElement("div");
@@ -23,7 +67,7 @@ function createTrackCard(track) {
     </div>
   `;
 
-  // ===== Delete handler =====
+  // Delete
   card.querySelector(".delete-btn").addEventListener("click", async () => {
     try {
       const res = await fetch(`http://localhost:3000/tracks/${track.id}`, { method: "DELETE" });
@@ -35,7 +79,7 @@ function createTrackCard(track) {
     }
   });
 
-  // ===== Edit handler (inline form with validation) =====
+  // Edit (inline form with validation)
   card.querySelector(".edit-btn").addEventListener("click", () => {
     card.innerHTML = `
       <form class="edit-form">
@@ -48,7 +92,7 @@ function createTrackCard(track) {
         <input id="edit-tag" value="${track.existential_tag}" placeholder="Tag" />
         <div class="error-message"></div>
         <textarea id="edit-notes" placeholder="Notes">${track.notes || ""}</textarea>
-        <div class="card-actions">
+        <div class="edit-actions">
           <button type="button" class="save-btn">💾 Save</button>
           <button type="button" class="cancel-btn">❌ Cancel</button>
         </div>
@@ -225,6 +269,7 @@ function setRandomQuote() {
   }, 500);
 }
 
+// ===== Init =====
 window.onload = () => {
   setRandomQuote();
   setInterval(setRandomQuote, 10000);

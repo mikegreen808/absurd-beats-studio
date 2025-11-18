@@ -23,7 +23,7 @@ function createTrackCard(track) {
     </div>
   `;
 
-  // ===== Delete handler =====
+  // Delete
   card.querySelector(".delete-btn").addEventListener("click", async () => {
     try {
       const res = await fetch(`http://localhost:3000/tracks/${track.id}`, { method: "DELETE" });
@@ -35,54 +35,11 @@ function createTrackCard(track) {
     }
   });
 
-  // ===== Edit handler (inline form with validation) =====
-  card.querySelector(".edit-btn").addEventListener("click", () => {
-    card.innerHTML = `
-      <form class="edit-form">
-        <input id="edit-title" value="${track.title}" placeholder="Title" />
-        <div class="error-message"></div>
-        <input id="edit-bpm" type="number" value="${track.bpm}" placeholder="BPM" />
-        <div class="error-message"></div>
-        <input id="edit-key" value="${track.key}" placeholder="Key" />
-        <div class="error-message"></div>
-        <input id="edit-tag" value="${track.existential_tag}" placeholder="Tag" />
-        <div class="error-message"></div>
-        <textarea id="edit-notes" placeholder="Notes">${track.notes || ""}</textarea>
-        <div class="card-actions">
-          <button type="button" class="save-btn">💾 Save</button>
-          <button type="button" class="cancel-btn">❌ Cancel</button>
-        </div>
-      </form>
-    `;
-
-    const titleInput = document.getElementById("edit-title");
-    const bpmInput = document.getElementById("edit-bpm");
-    const keyInput = document.getElementById("edit-key");
-    const tagInput = document.getElementById("edit-tag");
-
-    // Live validation
-    titleInput.addEventListener("input", () => validateField(titleInput, "title"));
-    bpmInput.addEventListener("input", () => validateField(bpmInput, "bpm"));
-    keyInput.addEventListener("input", () => validateField(keyInput, "key"));
-    tagInput.addEventListener("input", () => validateField(tagInput, "tag"));
-
-    // Save
-    card.querySelector(".save-btn").addEventListener("click", async () => {
-      const validTitle = validateField(titleInput, "title");
-      const validBpm = validateField(bpmInput, "bpm");
-      const validKey = validateField(keyInput, "key");
-      const validTag = validateField(tagInput, "tag");
-      if (!validTitle || !validBpm || !validKey || !validTag) return;
-
-      const updated = {
-        ...track,
-        title: titleInput.value.trim(),
-        bpm: parseInt(bpmInput.value, 10),
-        key: keyInput.value.trim(),
-        existential_tag: tagInput.value.trim(),
-        notes: document.getElementById("edit-notes").value.trim()
-      };
-
+  // Edit
+  card.querySelector(".edit-btn").addEventListener("click", async () => {
+    const newTitle = prompt("Edit title:", track.title);
+    if (newTitle && newTitle !== track.title) {
+      const updated = { ...track, title: newTitle };
       try {
         const res = await fetch(`http://localhost:3000/tracks/${track.id}`, {
           method: "PUT",
@@ -90,19 +47,12 @@ function createTrackCard(track) {
           body: JSON.stringify(updated)
         });
         if (!res.ok) throw new Error("HTTP " + res.status);
-
-        Object.assign(track, updated);
-        card.replaceWith(createTrackCard(track));
+        card.querySelector(".track-title").textContent = newTitle;
         updateTrackCount(document.querySelectorAll(".track-card").length);
       } catch (err) {
         alert("❌ Could not update track (" + err.message + ")");
       }
-    });
-
-    // Cancel
-    card.querySelector(".cancel-btn").addEventListener("click", () => {
-      card.replaceWith(createTrackCard(track));
-    });
+    }
   });
 
   return card;
