@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pulse Test</title>
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    @keyframes pulseCount {
+      0%   { transform: scale(1); color: #00FFFF; text-shadow: 0 0 5px #00FFFF; }
+      50%  { transform: scale(1.3); color: #FF33CC; text-shadow: 0 0 25px #FF33CC; }
+      100% { transform: scale(1); color: #00FFFF; text-shadow: 0 0 5px #00FFFF; }
+    }
+
+    #counter.pulse {
+      animation: pulseCount 1.2s ease forwards;
+    }
+
+    #counter.pulse-long {
+      animation: pulseCount 2s ease forwards;
+    }
+
+    button {
+      margin-top: 2rem;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2 id="counter">🎵 Tracks (0)</h2>
+  <button id="fetch">Fetch Tracks</button>
+  <button id="add">Add Track</button>
+
+  <script>
+    let count = 0;
+
+    function updateTrackCount(longPulse = false) {
+      const header = document.getElementById("counter");
+      header.textContent = `🎵 Tracks (${count})`;
+      header.classList.remove("pulse", "pulse-long");
+      void header.offsetWidth; // force reflow
+      header.classList.add(longPulse ? "pulse-long" : "pulse");
+    }
+
+    document.getElementById("fetch").addEventListener("click", () => {
+      count = Math.floor(Math.random() * 10); // simulate fetch
+      updateTrackCount(false);
+    });
+
+    document.getElementById("add").addEventListener("click", () => {
+      count++;
+      updateTrackCount(true);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Absurd Beats Studio</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1><span class="emoji">🎧</span> Absurd Beats Studio</h1>
+    <p class="tagline">Where rhythm meets the void.</p>
+    <p>Your browser becomes the mixing desk, channeling existential tracks from port 3000 into being.</p>
+
+    <button id="fetch-btn"><span class="emoji">🎶</span> Resonate with /tracks</button>
+    <div id="output">Waiting for data...</div>
+
+    <!-- Add Record Form -->
+    <section id="add-record">
+      <h2>Add Your Own Track</h2>
+      <form id="record-form">
+        <label for="title">Title</label>
+        <input type="text" id="title" required />
+
+        <label for="bpm">BPM</label>
+        <input type="number" id="bpm" required />
+
+        <label for="key">Key</label>
+        <input type="text" id="key" required />
+
+        <label for="existential_tag">Existential Tag</label>
+        <input type="text" id="existential_tag" required />
+
+        <label for="notes">Notes</label>
+        <input type="text" id="notes" />
+
+        <button type="submit">➕ Add Track</button>
+      </form>
+    </section>
+
+    <footer id="quote"></footer>
+
+    <script>
+      // API fetch logic with card rendering
+      document.getElementById("fetch-btn").addEventListener("click", async () => {
+        const output = document.getElementById("output");
+        output.textContent = "Fetching data...";
+        try {
+          const res = await fetch("http://localhost:3000/tracks");
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+
+          output.innerHTML = "";
+
+          data.forEach((track, index) => {
+            const card = createTrackCard(track);
+            card.style.opacity = 0;
+            output.appendChild(card);
+            setTimeout(() => {
+              card.style.transition = "opacity 0.8s ease";
+              card.style.opacity = 1;
+            }, index * 300);
+          });
+        } catch (err) {
+          output.textContent = "❌ Could not reach backend (" + err.message + ")";
+        }
+      });
+
+      // Helper: create a track card
+      function createTrackCard(track) {
+        const card = document.createElement("div");
+        card.className = "track-card";
+        card.innerHTML = `
+          <div class="track-title">${track.title}</div>
+          <div class="track-meta">🎵 BPM: ${track.bpm}</div>
+          <div class="track-meta">🎹 Key: ${track.key}</div>
+          <div class="track-tag">${track.existential_tag}</div>
+          <div class="track-meta">📝 ${track.notes || ""}</div>
+        `;
+        return card;
+      }
+
+      // Add Record Form logic
+      document.getElementById("record-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const track = {
+          title: document.getElementById("title").value,
+          bpm: document.getElementById("bpm").value,
+          key: document.getElementById("key").value,
+          existential_tag: document.getElementById("existential_tag").value,
+          notes: document.getElementById("notes").value
+        };
+
+        const output = document.getElementById("output");
+        const card = createTrackCard(track);
+        card.style.opacity = 0;
+        output.appendChild(card);
+
+        setTimeout(() => {
+          card.style.transition = "opacity 0.8s ease";
+          card.style.opacity = 1;
+        }, 100);
+
+        // Reset form
+        e.target.reset();
+      });
+
+      // Quotes with type metadata
+      const quotes = [
+        { text: "“Man is condemned to be free.” — Sartre", type: "philosopher" },
+        { text: "“The struggle itself toward the heights is enough to fill a man's heart.” — Camus", type: "philosopher" },
+        { text: "“Anxiety is the dizziness of freedom.” — Kierkegaard", type: "philosopher" },
+        { text: "“Hell is other people.” — Sartre", type: "philosopher" },
+        { text: "“One must imagine Sisyphus happy.” — Camus", type: "philosopher" },
+        { text: "“To live is to suffer, to survive is to find some meaning in the suffering.” — Nietzsche", type: "philosopher" },
+        { text: "“Music is a safe kind of high.” — Jimi Hendrix", type: "musician" },
+        { text: "“Without music, life would be a mistake.” — Nietzsche", type: "philosopher" },
+        { text: "“One good thing about music, when it hits you, you feel no pain.” — Bob Marley", type: "musician" },
+        { text: "“I’m just a musical prostitute, my dear.” — Freddie Mercury", type: "musician" },
+        { text: "“The beautiful thing about music is that it transcends language.” — Herbie Hancock", type: "musician" },
+        { text: "“Music can change the world because it can change people.” — Bono", type: "musician" },
+        { text: "“Life is what happens while you are busy making other plans.” — John Lennon", type: "musician" },
+        { text: "“Imagine all the people living life in peace.” — John Lennon", type: "musician" },
+        { text: "“I don't know where I'm going from here, but I promise it won't be boring.” — David Bowie", type: "musician" },
+        { text: "“We can be heroes, just for one day.” — David Bowie", type: "musician" }
+      ];
+
+      function setRandomQuote() {
+  const footer = document.getElementById("quote");
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const chosen = quotes[randomIndex];
+  footer.style.opacity = 0;
+  footer.style.animation = "none"; // reset animation
+  setTimeout(() => {
+    footer.textContent = chosen.text;
+    footer.className = chosen.type;
+    footer.style.opacity = 1;
+    footer.style.animation = "fadeQuote 0.8s ease";
+  }, 500);
+}
+
+      window.onload = () => {
+        setRandomQuote();
+        setInterval(setRandomQuote, 10000);
+      };
+    </script>
+  </body>
+</html>

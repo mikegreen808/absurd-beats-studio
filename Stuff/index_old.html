@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My API Frontend</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>☕ Absurd Beats Studio</h1>
+    <p>Your browser becomes the mixing desk, channeling existential tracks from port 3000 into being.</p>
+    <button id="fetch-btn">Fetch /tracks</button>
+    <div id="output">Waiting for data...</div>
+
+    <script>
+      document
+        .getElementById("fetch-btn")
+        .addEventListener("click", async () => {
+          const output = document.getElementById("output");
+          output.textContent = "Fetching data...";
+          try {
+            const res = await fetch("http://localhost:3000/tracks");
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            const text = await res.text();
+            output.textContent = text;
+          } catch (err) {
+            output.textContent =
+              "❌ Could not reach backend (" + err.message + ")";
+          }
+        });
+    </script>
+  </body>
+</html>
