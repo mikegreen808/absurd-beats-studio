@@ -4,6 +4,10 @@ Full‑stack project fusing **existential philosophy** with **music production**
 A CRUD application powered by Node.js/Express, DynamoDB, and Docker Compose.  
 This project serves both an API and a static frontend, with full seeding support for test data.
 
+<img width="3352" height="1301" alt="image" src="https://github.com/user-attachments/assets/8e7a416f-f7a0-4e4c-bc67-90af8ef0ab46" />
+
+
+
 ---
 
 ## ✨ Features
